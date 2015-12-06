@@ -35,7 +35,7 @@ set ruler
 set incsearch
 set hidden
 set background=dark
-colorscheme molokai
+silent! colorscheme molokai
 let g:rehash256 = 1
 " }}}
 
