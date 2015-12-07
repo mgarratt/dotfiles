@@ -23,6 +23,7 @@ Plug 'bling/vim-airline'
 Plug 'joonty/vdebug'
 Plug 'tomasr/molokai'
 Plug 'ap/vim-css-color'
+Plug 'wakatime/vim-wakatime'
 
 call plug#end()
 " }}}
