@@ -40,6 +40,11 @@ silent! colorscheme molokai
 let g:rehash256 = 1
 " }}}
 
+" Searching {{{
+set ignorecase
+set smartcase
+" }}}
+
 " Indenting {{{
 set autoindent
 set cindent
