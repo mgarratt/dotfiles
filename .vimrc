@@ -65,8 +65,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " Tabs {{{
 set switchbuf=usetab,newtab
-nnoremap <F8> :bnext<CR>
-nnoremap <S-F8> :bprevious<CR>
+nnoremap <F6> :bnext<CR>
+nnoremap <S-F6> :bprevious<CR>
 " }}}
 
 " Statusbar {{{
