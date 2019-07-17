@@ -38,3 +38,17 @@ cd vimrc
 chmod +x install.sh
 ./install.sh
 ```
+
+## Quick Reference
+
+[NERDTree]: https://github.com/scrooloose/nerdtree
+[ctrlp]: https://github.com/scrooloose/nerdtree
+[Supertab]: https://github.com/ervandew/supertab
+
+| Binding | Mode | Action                | Plugin       |
+|---------|------|-----------------------|--------------|
+| <C-n>   | *    | Open/Close NERDTree   | [NERDTree][] |
+| <F6>    | *    | Go to next buffer     |              |
+| <S-F6>  | *    | Go to previous buffer |              |
+| <C-p>   | *    | Open ctrlp            | [ctrlp][]    |
+| <Tab>   | i    | Supertab              | [Supertab][] |
