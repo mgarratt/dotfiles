@@ -10,20 +10,15 @@ set modelines=5
 call plug#begin('~/.vim/plugged')
 
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'StanAngeloff/php.vim'
-Plug 'shawncplus/phpcomplete.vim'
 Plug 'ervandew/supertab'
-Plug 'craigemery/vim-autotag'
 Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdtree'
-Plug 'tpope/vim-fugitive'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'bling/vim-airline'
-Plug 'joonty/vdebug'
 Plug 'tomasr/molokai'
 Plug 'ap/vim-css-color'
-Plug 'wakatime/vim-wakatime'
 
 call plug#end()
 " }}}
@@ -86,19 +81,3 @@ set list listchars=tab:>-,trail:·,extends:>
 set mps+=<:>
 " }}}
 
-" PHP Linting {{{
-let g:syntastic_php_phpcs_args='--standard=PSR2'
-" }}}
-
-" PHP Syntax {{{
-set tags=./tags;/
-function! PhpSyntaxOverride()
-    hi! def link phpDocTags  phpDefine
-    hi! def link phpDocParam phpType
-endfunction
-
-augroup phpSyntaxOverride
-    autocmd!
-    autocmd FileType php call PhpSyntaxOverride()
-augroup END
-" }}}
