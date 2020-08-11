@@ -3,7 +3,8 @@
 zplug "rbenv/rbenv", \
       as:command, \
       use:"bin/rbenv", \
-      hook-load: "__setup_rbenv"
+      hook-load:"__setup_rbenv", \
+      hook-build:"__build_rbenv"
 
 function __build_rbenv() {
     (cd $ZPLUG_REPOS/rbenv/rbenv && \

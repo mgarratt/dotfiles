@@ -36,6 +36,12 @@ dependencies=(
     git
 )
 
+if [[ "${OSTYPE}" = linux* ]]; then
+    dependencies+=('fdfind')
+else
+    dependencies+=('fd')
+fi
+
 error=0
 for dependency in $dependencies; do
     if (( $+commands[$dependency] )); then
@@ -72,20 +78,20 @@ if [[ "${error}" -eq 1 ]]; then
 fi
 
 print_green "Setting up ZSH"
-mkdir ${__HOME}/.zsh
-ln -s ${__DIR}/zsh/.zshrc ${__HOME}/.zshrc
-ls -s ${__DIR}/zsh/.zsh/ ${__HOME}/.zsh/
+ln -s ${__DIR}/zsh/.zshrc ${__HOME}/
+ln -s ${__DIR}/zsh/.zsh ${__HOME}/
 print_green "ZSH done - zplug and plugins will install when zsh next starts"
 
 print_green "Setting up TMUX"
+ln -s ${__DIR}/tmux/.tmux.conf ${__HOME}/
 git clone https://github.com/tmux-plugins/tpm ${__HOME}/.tmux/plugins/tpm
-ln -s ${__DIR}/tmux/.tmux.conf ${__HOME}/.tmux.conf
-${__HOME}/.tmux/plugins/tpm/bin/install_plugins
+tmux new '${__HOME}/.tmux/plugins/tpm/bin/install_plugins'
 print_green "TMUX done"
 
 print_green "Setting up NEOVIM"
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-ln -s ${__DIR}/neovim/init.vim ${__HOME}/.config/nvim/init.vim
+mkdir -p ${__HOME}/.config/nvim/
+ln -s ${__DIR}/neovim/init.vim ${__HOME}/.config/nvim/
 nvim +PlugInstall +qall
 print_green "NEOVIM done"
