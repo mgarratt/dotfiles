@@ -11,7 +11,7 @@ Plug 'qstrahl/vim-matchmaker'           " Highlight matches for the word under t
 
 " Navigation
 Plug 'unblevable/quick-scope'         " Highlight nearest unique letters
-Plug '/usr/local/opt/fzf'             " File fuzzy search
+Plug 'junegunn/fzf'                   " File fuzzy search
 Plug 'junegunn/fzf.vim'               " Additional fuzzy searching
 
 " Vim Skills
