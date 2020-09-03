@@ -15,6 +15,11 @@ function __build_rbenv() {
          git -C "$(rbenv root)"/plugins/ruby-build pull
      else
          git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+     fi && \
+     if [[ -d "$(rbenv root)"/plugins/bundler ]]; then
+         git -C "$(rbenv root)"/plugins/bundler pull
+     else
+         git clone https://github.com/carsomyr/rbenv-bundler.git "$(rbenv root)"/plugins/bundler
      fi)
 }
 
