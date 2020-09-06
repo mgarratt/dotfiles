@@ -6,6 +6,7 @@ fi
 
 if [[ "$OSTYPE" = linux* ]]; then
     alias 'fd=fdfind'
+    alias rfkill="sudo rfkill"
 fi
 
 # Git aliases

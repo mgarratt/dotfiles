@@ -9,3 +9,5 @@ fi
 export EDITOR="vim"
 export PAGER="less"
 export LESS="-R"
+
+export PATH="$HOME/bin:${PATH}"

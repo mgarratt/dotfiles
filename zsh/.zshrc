@@ -4,7 +4,8 @@ source ~/.zsh/aliases.zsh
 
 # Always start tmux if it's installed and we're not already in tmux
 if (( $+commands[tmux] )) && [[ -z "$TMUX" ]]; then
-    tmux attach -t zsh-session || tmux new -s zsh-session
+    TMUX_SESSION=${TMUX_SESSION:-'zsh-session'}
+    tmux attach -t ${TMUX_SESSION} || tmux new -s ${TMUX_SESSION}
     exit
 fi
 
