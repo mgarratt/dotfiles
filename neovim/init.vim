@@ -9,6 +9,9 @@ call plug#begin(stdpath('data') . '/plugged')
 Plug 'nathanaelkane/vim-indent-guides'  " Alternate indent background colours
 Plug 'qstrahl/vim-matchmaker'           " Highlight matches for the word under the cursor
 
+" Theme
+Plug 'arcticicestudio/nord-vim'
+
 " Navigation
 Plug 'unblevable/quick-scope'         " Highlight nearest unique letters
 Plug 'junegunn/fzf'                   " File fuzzy search
@@ -82,6 +85,8 @@ set completeopt=longest,menuone " Autocomplete menu insert longest item, display
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
+colorscheme nord
+
 " Highlight 80 & 120 characters
 highlight ColorColumn ctermbg=16
 call matchadd('ColorColumn', '\%80v', 100)
@@ -91,8 +96,10 @@ call matchadd('ColorColumn', '\%120v', 100)
 " Indent Guildelines {{{
 let g:indent_guides_auto_colors = 0                            " Use defined colours below
 let g:indent_guides_enable_on_vim_startup = 1                  " Always enable
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=0  " Dark
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=23 " Light
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=Black    ctermbg=0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=DarkGrey ctermbg=8
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=0  " Dark
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=0 " Light
 " }}}
 
 " Matchmaker {{{
