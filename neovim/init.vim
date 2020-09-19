@@ -16,6 +16,7 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'unblevable/quick-scope'         " Highlight nearest unique letters
 Plug 'junegunn/fzf'                   " File fuzzy search
 Plug 'junegunn/fzf.vim'               " Additional fuzzy searching
+Plug 'simeji/winresizer'              " Window navigation and sizing
 
 " Vim Skills
 Plug 'takac/vim-hardtime' "Prevent using arrows or hjkl for navigation
