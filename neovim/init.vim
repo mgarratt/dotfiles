@@ -8,6 +8,8 @@ call plug#begin(stdpath('data') . '/plugged')
 " Visual
 Plug 'nathanaelkane/vim-indent-guides'  " Alternate indent background colours
 Plug 'qstrahl/vim-matchmaker'           " Highlight matches for the word under the cursor
+" WARNING: This requires pynvim installed via pip
+Plug 'TaDaa/vimade'                     " Fade inactive windows
 
 " Theme
 Plug 'arcticicestudio/nord-vim'
@@ -34,7 +36,11 @@ Plug 'christoomey/vim-tmux-navigator'     " Easier navigation between tmux and v
 Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
 
 " Clojure
-Plug 'tpope/vim-fireplace'     " Integration with Clojure REPL
+"Plug 'tpope/vim-fireplace'           " Integration with Clojure REPL
+Plug 'Olical/conjure'                " Better integration than Fireplace?
+Plug 'clojure-vim/vim-jack-in'       " Start a repl in vim
+Plug 'tpope/vim-dispatch'            " For background commands
+Plug 'radenling/vim-dispatch-neovim' " To make dispatch work in nvim
 
 " Ruby
 Plug 'tpope/vim-rails'
@@ -83,6 +89,8 @@ set wildmenu          " Command line autocompletion
 set wildmode=list:longest,full
 set completeopt=longest,menuone " Autocomplete menu insert longest item, display menu if only one item
 
+let maplocalleader = ","
+
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
@@ -92,6 +100,13 @@ colorscheme nord
 highlight ColorColumn ctermbg=16
 call matchadd('ColorColumn', '\%80v', 100)
 call matchadd('ColorColumn', '\%120v', 100)
+
+" Get out of terminal mode with <C-q>
+tnoremap <C-q> <C-\><C-n>
+" }}}
+
+" Winresizer {{{
+let g:winresizer_start_key = '<Leader>w'
 " }}}
 
 " Indent Guildelines {{{
@@ -105,6 +120,11 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=DarkGrey ctermbg=8
 
 " Matchmaker {{{
 let g:matchmaker_enable_startup = 1
+" }}}
+
+" Vimade {{{
+let g:vimade = {}
+let g:vimade.enablefocusfading = 1
 " }}}
 
 " FZF {{{
