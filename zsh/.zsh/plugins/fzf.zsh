@@ -6,22 +6,10 @@
 
 export FZF_COMPLETION_TRIGGER='~~'
 
-if [[ "$OSTYPE" = darwin* ]]; then
-    USE="*darwin*amd64*"
-else
-    USE="*linux*amd64*"
-fi
-
-zplug "junegunn/fzf-bin", \
-    from:gh-r, \
-    as:command, \
-    rename-to:fzf, \
-    use:"${USE}"
-
 zplug "junegunn/fzf", \
     use:"shell/*.zsh", \
-    on:"junegunn/fzf-bin", \
     defer:1, \
+    hook-build:"./install --key-bindings --completion --no-update-rc", \
     hook-load:"__fzf_setup"
 
 function __fzf_setup() {
@@ -44,4 +32,7 @@ function __fzf_setup() {
             *)            fzf "$@" ;;
         esac
     }
+
+
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 }
