@@ -6,7 +6,7 @@
 call plug#begin(stdpath('data') . '/plugged')
 
 " Visual
-Plug 'nathanaelkane/vim-indent-guides'  " Alternate indent background colours
+Plug 'Yggdroot/indentLine'              " Lines to guide indents
 Plug 'qstrahl/vim-matchmaker'           " Highlight matches for the word under the cursor
 " WARNING: This requires pynvim installed via pip
 Plug 'TaDaa/vimade'                     " Fade inactive windows
@@ -101,6 +101,9 @@ highlight ColorColumn ctermbg=16
 call matchadd('ColorColumn', '\%80v', 100)
 call matchadd('ColorColumn', '\%120v', 100)
 
+" YAML indents
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " Get out of terminal mode with <C-q>
 tnoremap <C-q> <C-\><C-n>
 " }}}
@@ -110,12 +113,7 @@ let g:winresizer_start_key = '<Leader>w'
 " }}}
 
 " Indent Guildelines {{{
-let g:indent_guides_auto_colors = 0                            " Use defined colours below
-let g:indent_guides_enable_on_vim_startup = 1                  " Always enable
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=Black    ctermbg=0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=DarkGrey ctermbg=8
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=0  " Dark
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=0 " Light
+let g:indentLine_char = '┆'
 " }}}
 
 " Matchmaker {{{
