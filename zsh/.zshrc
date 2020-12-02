@@ -49,11 +49,6 @@ for file in ~/.zsh/themes/*zsh; do
     source "$file"
 done
 
-# Secret things (not git managed, so maybe doesn't exist)
-if [[ -f ~/.zsh/secret.zsh ]]; then
-    source ~/.zsh/secret.zsh
-fi
-
 # Install missing plugins
 if ! zplug check; then
     zplug install
@@ -61,3 +56,9 @@ fi
 
 # Load plugins
 zplug load
+
+# Secret things (not git managed, so maybe doesn't exist)
+# After zplug load to make use of plugins
+if [[ -f ~/.zsh/secret.zsh ]]; then
+    source ~/.zsh/secret.zsh
+fi
