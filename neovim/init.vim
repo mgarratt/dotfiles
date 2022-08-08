@@ -46,6 +46,15 @@ Plug 'radenling/vim-dispatch-neovim' " To make dispatch work in nvim
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-endwise'  " Automatically add end to blocks
 
+"Python
+
+" Terraform
+Plug 'hashivim/vim-terraform'
+
+" Typescript
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'MaxMEllon/vim-jsx-pretty'
+
 call plug#end()
 " }}}
 
@@ -146,6 +155,8 @@ nnoremap <Leader>t :Tags<CR>
 let g:ale_completion_enabled=0          " Completion is handled by vim
 let g:ale_set_highlights=0              " Don't hightlight errors
 let g:ale_lint_on_text_changed='always' " Run linting whenever something changes
+let g:ale_fixers = {}
+let g:ale_fixers.python = ['black']
 "let g:ale_linters = {
 "\   'javascript': ['eslint'],
 "\   'clojure': ['joker','clj-kondo'],

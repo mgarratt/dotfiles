@@ -63,6 +63,11 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+# Use screenshot wrapper script for screenshots
+bindsym $mod+Print exec screenshot
+bindsym $mod+Shift+Print exec screenshot -s
+bindsym $mod+Control+Shift+Print exec screenshot -w
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 

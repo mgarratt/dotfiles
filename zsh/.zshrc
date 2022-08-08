@@ -25,6 +25,10 @@ autoload -Uz compinit
 # Rust installer isn't compatible with zplug
 source $HOME/.cargo/env
 
+# Golang installed from OS repo
+export PATH="$HOME/go/bin:$PATH"
+export GOPATH="$HOME/go"
+
 # Install zplug
 if [[ ! -d ~/.zplug ]]; then
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
@@ -62,3 +66,10 @@ zplug load
 if [[ -f ~/.zsh/secret.zsh ]]; then
     source ~/.zsh/secret.zsh
 fi
+
+PROG=todoist source $GOPATH/pkg/mod/github.com/urfave/cli@v1.20.0/autocomplete/zsh_autocomplete
+PROG=todoist source $GOPATH/pkg/mod/github.com/urfave/cli@v1.20.0/autocomplete/zsh_autocomplete
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
