@@ -67,9 +67,6 @@ if [[ -f ~/.zsh/secret.zsh ]]; then
     source ~/.zsh/secret.zsh
 fi
 
-PROG=todoist source $GOPATH/pkg/mod/github.com/urfave/cli@v1.20.0/autocomplete/zsh_autocomplete
-PROG=todoist source $GOPATH/pkg/mod/github.com/urfave/cli@v1.20.0/autocomplete/zsh_autocomplete
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

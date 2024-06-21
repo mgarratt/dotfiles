@@ -7,9 +7,6 @@ zplug "rbenv/rbenv", \
       hook-build:"__build_rbenv"
 
 function __build_rbenv() {
-    (cd $ZPLUG_REPOS/rbenv/rbenv && \
-     src/configure && \
-     make -C src)
     (mkdir -p "$(rbenv root)"/plugins && \
      if [[ -d "$(rbenv root)"/plugins/ruby-build ]]; then
          git -C "$(rbenv root)"/plugins/ruby-build pull

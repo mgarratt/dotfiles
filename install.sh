@@ -34,6 +34,7 @@ dependencies=(
     tmux
     nvim
     git
+    make
 )
 
 if [[ "${OSTYPE}" = linux* ]]; then
