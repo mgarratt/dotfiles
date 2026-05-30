@@ -1,2 +1,2 @@
 #!/bin/zsh
-(( $+commands[direnv] )) && eval "$(direnv hook zsh)"
+has direnv && eval "$(direnv hook zsh)"

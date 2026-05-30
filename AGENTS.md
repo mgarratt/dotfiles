@@ -34,9 +34,11 @@ machine; day-to-day, files are symlinked into `$HOME` by stow.
 ## Shell config
 
 - Keep `.zshrc` lean: only what must run to bring up the shell. Tool integrations and
-  completions belong in `zsh/.zsh/completions/` as small files guarded by
-  `(( $+commands[<tool>] ))` so they no-op when the tool is absent. External plugin
-  *repositories* are loaded through zplug (`zsh/.zsh/plugins/`).
+  completions belong in `zsh/.zsh/completions/` as small files guarded by `has <tool>`
+  (helper in `zsh/.zsh/lib/has.zsh`: checks the command exists *and* resolves to a
+  runnable executable, so it's robust against dangling symlinks like Docker Desktop's
+  kubectl) so they no-op when the tool is absent. External plugin *repositories* are
+  loaded through zplug (`zsh/.zsh/plugins/`).
 
 ## Platform
 

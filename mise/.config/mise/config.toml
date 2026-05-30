@@ -12,6 +12,7 @@ java      = "temurin-21"
 clojure   = "latest"   # provides clj/clojure
 leiningen = "latest"
 go        = "latest"
+gh        = "latest"
 # Explicit aqua backend: the bare `terraform` name fails to resolve a backend here,
 # but aqua:hashicorp/terraform lists versions and has linux/arm64 builds.
 "aqua:hashicorp/terraform" = "latest"

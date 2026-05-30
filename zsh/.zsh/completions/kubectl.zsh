@@ -1,2 +1,2 @@
 #!/bin/zsh
-(( $+commands[kubectl] )) && source <(kubectl completion zsh)
+has kubectl && source <(kubectl completion zsh)

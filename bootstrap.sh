@@ -104,5 +104,12 @@ if [[ ! -f "$PLUG_VIM" ]]; then
 fi
 nvim +PlugInstall +qall || true
 
+# --- Claude Code --------------------------------------------------------------
+# Native installer; auto-updates itself in the background thereafter.
+if ! command -v claude >/dev/null 2>&1; then
+    green "Installing Claude Code"
+    curl -fsSL https://claude.ai/install.sh | bash
+fi
+
 green "Done."
 green "Next: seed your real secrets with:  sops zsh/.zsh/secrets.enc.env"
