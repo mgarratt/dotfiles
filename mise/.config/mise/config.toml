@@ -13,6 +13,7 @@ clojure   = "latest"   # provides clj/clojure
 leiningen = "latest"
 go        = "latest"
 gh        = "latest"
+starship  = "latest"   # shell prompt; prebuilt aarch64 binary (no rust needed)
 # Explicit aqua backend: the bare `terraform` name fails to resolve a backend here,
 # but aqua:hashicorp/terraform lists versions and has linux/arm64 builds.
 "aqua:hashicorp/terraform" = "latest"

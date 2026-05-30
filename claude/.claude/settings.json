@@ -2,6 +2,6 @@
   "model": "opus",
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline.sh"
+    "command": "starship statusline claude-code"
   }
 }

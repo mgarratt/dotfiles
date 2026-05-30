@@ -12,13 +12,6 @@ if (( $+commands[tmux] )) && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" 
     exit
 fi
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 setopt autocd extendedglob nomatch long_list_jobs
 unsetopt beep notify
 
@@ -34,10 +27,9 @@ fi
 source ~/.zplug/init.zsh
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 
-# Load libs, plugin specs, and themes
+# Load libs and plugin specs
 for file in ~/.zsh/lib/*.zsh; do source "$file"; done
 for file in ~/.zsh/plugins/*.zsh; do source "$file"; done
-for file in ~/.zsh/themes/*.zsh; do source "$file"; done
 
 # Install any missing plugins, then load
 if ! zplug check; then
@@ -56,3 +48,6 @@ export SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-$HOME/.config/sops/age/keys.txt}"
 if [[ -f ~/.zsh/secrets.enc.env ]] && (( $+commands[sops] )); then
     source <(sops -d --output-type dotenv ~/.zsh/secrets.enc.env 2>/dev/null)
 fi
+
+# Prompt
+has starship && eval "$(starship init zsh)"

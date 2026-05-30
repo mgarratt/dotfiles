@@ -81,7 +81,7 @@ done
 # Explicit -d/-t: the repo may live outside $HOME (e.g. ~/Projects/dotfiles), so we
 # can't rely on stow's default target (the parent of the stow dir).
 green "Linking stow packages"
-stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude
+stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude starship
 
 # --- global toolchain ---------------------------------------------------------
 green "Installing global toolchain via mise (this can take a while on first run)"

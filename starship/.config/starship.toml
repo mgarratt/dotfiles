@@ -1,0 +1,50 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Starter config — starship's defaults are good; tweak here over time.
+# Full reference: https://starship.rs/config/
+
+add_newline = true
+
+# WSL filesystem scans (especially anything under /mnt/c) can exceed the 30ms
+# default and emit "Scanning current directory timed out". Give it more headroom.
+scan_timeout = 50
+
+# Timestamp every prompt on the right. zsh keeps the right prompt in scrollback,
+# so each past command stays stamped with when you ran it (handy for debugging).
+right_format = '$time'
+
+[character]
+success_symbol = '[❯](green)'
+error_symbol = '[❯](red)'
+
+# Claude Code statusline — rendered via `starship statusline claude-code`.
+# These modules only appear in that profile, not the normal shell prompt.
+[profiles]
+claude-code = "$directory$git_branch$claude_model$claude_context$claude_cost"
+
+[claude_model]
+format = '[$symbol$model]($style) '
+symbol = '🤖 '
+style = 'bold blue'
+
+# --- Context modules ---------------------------------------------------------
+# Per-command timestamp, right-aligned (see right_format above).
+[time]
+disabled = false
+time_format = '%H:%M:%S'
+format = '[$time]($style)'
+style = 'dimmed white'
+
+# Current kube context + namespace — always on, as a prod-context guard.
+[kubernetes]
+disabled = false
+format = 'on [$symbol$context( \($namespace\))]($style) '
+
+# Show when a directory's direnv environment is loaded.
+[direnv]
+disabled = false
+
+# AWS profile/region is shown by default; also surface the Azure subscription.
+[azure]
+disabled = false
+format = 'on [$symbol($subscription)]($style) '
