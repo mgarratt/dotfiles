@@ -1,2 +1,7 @@
-zsh/.zsh/secret.zsh
-
+# Never commit the age private key or any decrypted plaintext secrets.
+# (The *encrypted* zsh/.zsh/secrets.enc.env IS committed.)
+keys.txt
+*.age
+*.dec
+secrets.env
+zsh/.zsh/secrets.env

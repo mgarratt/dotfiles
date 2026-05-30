@@ -1,0 +1,3 @@
+creation_rules:
+  - path_regex: \.enc\.(env|ya?ml|json)$
+    age: age1tmpj4nrc879dcp3hj6emndcjnnc7ezc882f20yx7vetdhqlyaafqqprdae

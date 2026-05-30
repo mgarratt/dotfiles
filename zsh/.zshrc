@@ -1,9 +1,12 @@
-# ENV vars and aliases can go first to be used by other scripts
+# VS Code shell integration
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
+# ENV vars and aliases first so later scripts can use them
 source ~/.zsh/env.zsh
 source ~/.zsh/aliases.zsh
 
-# Always start tmux if it's installed and we're not already in tmux
-if (( $+commands[tmux] )) && [[ -z "$TMUX" ]]; then
+# Always start tmux if it's installed, we're not already in tmux, and not in VS Code
+if (( $+commands[tmux] )) && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
     TMUX_SESSION=${TMUX_SESSION:-'zsh-session'}
     tmux attach -t ${TMUX_SESSION} || tmux new -s ${TMUX_SESSION}
     exit
@@ -18,18 +21,11 @@ fi
 
 setopt autocd extendedglob nomatch long_list_jobs
 unsetopt beep notify
-zstyle :compinstall filename '/home/mgarratt/.zshrc'
 
-autoload -Uz compinit
+# Toolchain versions (node, ruby, java, clojure, go, terraform, rust, …)
+eval "$(mise activate zsh)"
 
-# Rust installer isn't compatible with zplug
-source $HOME/.cargo/env
-
-# Golang installed from OS repo
-export PATH="$HOME/go/bin:$PATH"
-export GOPATH="$HOME/go"
-
-# Install zplug
+# Install zplug on first run
 if [[ ! -d ~/.zplug ]]; then
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
@@ -38,35 +34,25 @@ fi
 source ~/.zplug/init.zsh
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 
-# Load libs & functions
-for file in ~/.zsh/lib/*.zsh; do
-    source "$file"
-done
+# Load libs, plugin specs, and themes
+for file in ~/.zsh/lib/*.zsh; do source "$file"; done
+for file in ~/.zsh/plugins/*.zsh; do source "$file"; done
+for file in ~/.zsh/themes/*.zsh; do source "$file"; done
 
-# Load plugins
-for file in ~/.zsh/plugins/*.zsh; do
-    source "$file"
-done
-
-# Load themes
-for file in ~/.zsh/themes/*zsh; do
-    source "$file"
-done
-
-# Install missing plugins
+# Install any missing plugins, then load
 if ! zplug check; then
     zplug install
 fi
-
-# Load plugins
 zplug load
 
-# Secret things (not git managed, so maybe doesn't exist)
-# After zplug load to make use of plugins
-if [[ -f ~/.zsh/secret.zsh ]]; then
-    source ~/.zsh/secret.zsh
-fi
+# compinit must run before sourcing compdef-based tool integrations below
+autoload -Uz compinit && compinit
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Tool completions & integrations — each file no-ops when its tool is absent
+for file in ~/.zsh/completions/*.zsh(N); do source "$file"; done
+
+# Secrets: decrypt with sops+age and load into the environment
+export SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-$HOME/.config/sops/age/keys.txt}"
+if [[ -f ~/.zsh/secrets.enc.env ]] && (( $+commands[sops] )); then
+    source <(sops -d --output-type dotenv ~/.zsh/secrets.enc.env 2>/dev/null)
+fi

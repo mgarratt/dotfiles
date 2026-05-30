@@ -1,12 +1,8 @@
 #!/bin/zsh
 
-if [[ "$OSTYPE" = darwin* ]]; then
-    export SHORT_HOST=$(scutil --get ComputerName 2>/dev/null) || SHORT_HOST=${HOST/.*/}
-else
-    export SHORT_HOST=${HOST/.*/}
-fi
+export SHORT_HOST=${HOST/.*/}
 
-export EDITOR="vim"
+export EDITOR="nvim"
 export PAGER="less"
 export LESS="-R"
 

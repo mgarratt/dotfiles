@@ -1,0 +1,21 @@
+[settings]
+experimental = true
+idiomatic_version_file_enable_tools = ["node"]
+
+# Global toolchain. Override per-project with a local mise.toml / .mise.toml.
+# Note: `mise use -g …` rewrites this file and can replace the stow symlink with a
+# real file — treat this repo copy as canonical and re-`stow mise` if that happens.
+[tools]
+node      = "lts"
+ruby      = "latest"
+java      = "temurin-21"
+clojure   = "latest"   # provides clj/clojure
+leiningen = "latest"
+go        = "latest"
+# Explicit aqua backend: the bare `terraform` name fails to resolve a backend here,
+# but aqua:hashicorp/terraform lists versions and has linux/arm64 builds.
+"aqua:hashicorp/terraform" = "latest"
+rust      = "stable"   # rustup-direct only if a project needs nightly/components/targets
+# sops decrypts secrets at startup. Use the github backend (release binary) because it
+# has linux/arm64 assets; the default aqua package does not.
+"github:getsops/sops" = "latest"

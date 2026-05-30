@@ -1,13 +1,10 @@
 #! /bin/zsh
 
-if [[ "$OSTYPE" = darwin* ]]; then
-    alias vim='nvim'
-fi
+alias vim='nvim'
 
-if [[ "$OSTYPE" = linux* ]]; then
-    alias 'fd=fdfind'
-    alias rfkill="sudo rfkill"
-fi
+# Ubuntu ships fd as fdfind
+alias fd='fdfind'
+alias rfkill='sudo rfkill'
 
 # Git aliases
 alias gst='git status'
