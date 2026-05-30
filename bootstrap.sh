@@ -9,6 +9,10 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$REPO_DIR"
 
+# Tools installed under ~/.local/bin (mise, claude) so re-runs detect them
+# instead of reinstalling.
+export PATH="$HOME/.local/bin:$PATH"
+
 green() { printf '\033[0;32m[bootstrap]\033[0m %s\n' "$*"; }
 red()   { printf '\033[0;31m[bootstrap]\033[0m %s\n' "$*" >&2; }
 
@@ -85,7 +89,10 @@ stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude starship
 
 # --- global toolchain ---------------------------------------------------------
 green "Installing global toolchain via mise (this can take a while on first run)"
-"$MISE" install
+# Trust the (symlinked) global config so a fresh machine doesn't prompt/refuse.
+"$MISE" trust "$HOME/.config/mise/config.toml" >/dev/null 2>&1 || true
+# Non-fatal: one failing tool (e.g. rust on older glibc) must not abort the rest.
+"$MISE" install || red "Some mise tools failed to install; continue, then fix individually with 'mise install <tool>'."
 
 # --- tmux plugin manager ------------------------------------------------------
 TPM_DIR="$HOME/.tmux/plugins/tpm"
