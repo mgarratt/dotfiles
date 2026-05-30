@@ -76,8 +76,9 @@ backup_if_real() {
         green "Backed up $target -> $BACKUP_DIR/${target#"$HOME"/}"
     fi
 }
-for f in "$HOME/.zshrc" "$HOME/.tmux.conf" "$HOME/.claude/settings.json" \
-         "$HOME/.config/nvim/init.vim" "$HOME/.config/mise/config.toml"; do
+for f in "$HOME/.zshrc" "$HOME/.tmux.conf" "$HOME/.gitconfig" \
+         "$HOME/.claude/settings.json" "$HOME/.config/nvim/init.vim" \
+         "$HOME/.config/mise/config.toml" "$HOME/.config/git/ignore"; do
     backup_if_real "$f"
 done
 
@@ -85,7 +86,23 @@ done
 # Explicit -d/-t: the repo may live outside $HOME (e.g. ~/Projects/dotfiles), so we
 # can't rely on stow's default target (the parent of the stow dir).
 green "Linking stow packages"
-stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude starship
+stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude starship git
+
+# --- git identity (shared config is stowed; email stays per-machine) ----------
+# The stowed ~/.gitconfig includes ~/.gitconfig.local for the per-machine email.
+# --includes: a --global-scoped read ignores [include] files unless asked.
+if [[ -z "$(git config --global --includes user.email 2>/dev/null || true)" ]]; then
+    if [[ -t 0 ]]; then
+        read -rp "[bootstrap] Git email for this machine: " git_email || true
+        if [[ -n "${git_email:-}" ]]; then
+            git config --file "$HOME/.gitconfig.local" user.email "$git_email"
+            green "Saved git email to ~/.gitconfig.local"
+        fi
+    else
+        red "Git email unset and no TTY to prompt. Set it with:"
+        red "  git config --file ~/.gitconfig.local user.email you@example.com"
+    fi
+fi
 
 # --- global toolchain ---------------------------------------------------------
 green "Installing global toolchain via mise (this can take a while on first run)"

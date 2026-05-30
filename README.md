@@ -33,16 +33,26 @@ Each top-level directory is a stow package whose tree mirrors `$HOME`:
 
 | Package  | Links into            |
 |----------|-----------------------|
-| `zsh`    | `~/.zshrc`, `~/.zsh/` |
-| `tmux`   | `~/.tmux.conf`        |
-| `nvim`   | `~/.config/nvim/`     |
-| `mise`   | `~/.config/mise/`     |
-| `claude` | `~/.claude/`          |
+| `zsh`      | `~/.zshrc`, `~/.zsh/`              |
+| `tmux`     | `~/.tmux.conf`                    |
+| `nvim`     | `~/.config/nvim/`                 |
+| `mise`     | `~/.config/mise/`                 |
+| `claude`   | `~/.claude/`                      |
+| `starship` | `~/.config/starship.toml`         |
+| `git`      | `~/.gitconfig`, `~/.config/git/`  |
 
 Add/remove a package with `stow -t ~ <pkg>` / `stow -D -t ~ <pkg>`; re-link after adding
 files with `stow -R -t ~ <pkg>`. The `-t ~` is required because this repo lives outside
 `$HOME` — without it, stow targets the repo's parent directory. `bootstrap.sh` already
 passes the right `-d`/`-t`.
+
+## Git identity
+
+The committed `~/.gitconfig` holds only machine-independent settings and ends with
+`[include] path = ~/.gitconfig.local`. The per-machine email lives in that local file
+(not committed), so personal/work identities stay per-machine. `bootstrap.sh` prompts for
+the email and writes `~/.gitconfig.local` when it's unset; add work `[includeIf]` blocks
+there as needed.
 
 ## Toolchains (mise)
 

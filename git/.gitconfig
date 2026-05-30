@@ -1,0 +1,9 @@
+# Shared, machine-independent git config (managed by dotfiles).
+# Per-machine identity (email, work conditional-includes) lives in
+# ~/.gitconfig.local, pulled in by the [include] below — later entries win.
+[user]
+	name = Mark Garratt
+[init]
+	defaultBranch = main
+[include]
+	path = ~/.gitconfig.local
