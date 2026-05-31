@@ -1,6 +1,11 @@
 [settings]
 experimental = true
-idiomatic_version_file_enable_tools = ["node"]
+# Read other version managers' files (.nvmrc/.node-version, .ruby-version/Gemfile,
+# .java-version/.sdkmanrc) for non-mise repos. Opt-in per tool: parsing adds per-dir
+# overhead, and some tools (go's go.mod, terraform's main.tf) pin surprising versions.
+idiomatic_version_file_enable_tools = ["node", "ruby", "java"]
+# Install corepack shims (yarn/pnpm) after each node install.
+node.corepack = true
 
 # Global toolchain. Override per-project with a local mise.toml / .mise.toml.
 # Note: `mise use -g …` rewrites this file and can replace the stow symlink with a
