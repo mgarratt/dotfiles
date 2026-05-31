@@ -1,0 +1,72 @@
+#!/bin/sh
+# notify-send shim for WSL.
+#
+# WSL has no libnotify daemon, so notify-send is missing. Emulate the common
+# `notify-send [OPTIONS] SUMMARY [BODY]` form with a Windows toast handed to the
+# host — the same idea as the xdg-open shim in this package. The toast is
+# attributed to the terminal (Windows Terminal when $WT_SESSION is set), so it
+# reads "Terminal" and a click activates it (a click won't focus a specific tmux
+# pane — toasts can't — so it just dismisses), and it is skipped when the
+# terminal is already the foreground window.
+#
+# Lives at ~/.local/bin/notify-send, ahead of /usr/bin on PATH. The wsl package
+# is only stowed under WSL, but guard anyway: off WSL, hand off to the real
+# notify-send so this never shadows a working one.
+
+# Not on WSL? Defer to the real notify-send.
+if ! command -v powershell.exe >/dev/null 2>&1; then
+    for real in /usr/bin/notify-send /bin/notify-send; do
+        [ -x "$real" ] && exec "$real" "$@"
+    done
+    exit 0
+fi
+
+# Reduce the arguments to summary + body (skip options; some take a value).
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --) shift; break ;;
+        -u|--urgency|-t|--expire-time|-i|--icon|-c|--category|-h|--hint|-a|--app-name|-A|--action)
+            shift 2 2>/dev/null || shift; continue ;;
+        -*) shift; continue ;;
+        *) break ;;
+    esac
+done
+summary=$(printf '%s' "${1:-}" | tr -d "\`'")   # strip PS string breakers
+body=$(printf '%s' "${2:-}" | tr -d "\`'")
+[ -n "$summary" ] || exit 0
+command -v iconv >/dev/null 2>&1 && command -v base64 >/dev/null 2>&1 || exit 0
+
+if [ -n "${WT_SESSION:-}" ]; then
+    appid='Microsoft.WindowsTerminal_8wekyb3d8bbwe!App'   # click -> activate Terminal
+    skip='WindowsTerminal'                                 # don't toast when focused
+else
+    appid='{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe'
+    skip=''
+fi
+
+ps=$(cat <<PS
+\$ErrorActionPreference='SilentlyContinue'
+try {
+  \$skip='${skip}'
+  if (\$skip) {
+    Add-Type -Name FG -Namespace W -MemberDefinition '[DllImport("user32.dll")] public static extern System.IntPtr GetForegroundWindow(); [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(System.IntPtr h, out uint p);'
+    \$pid2=0; [void][W.FG]::GetWindowThreadProcessId([W.FG]::GetForegroundWindow(), [ref]\$pid2)
+    if ((Get-Process -Id \$pid2 -ErrorAction SilentlyContinue).ProcessName -eq \$skip) { exit }
+  }
+  [Windows.UI.Notifications.ToastNotificationManager,Windows.UI.Notifications,ContentType=WindowsRuntime] | Out-Null
+  \$tpl=[Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
+  \$txt=\$tpl.GetElementsByTagName('text')
+  \$txt.Item(0).AppendChild(\$tpl.CreateTextNode('${summary}')) | Out-Null
+  \$txt.Item(1).AppendChild(\$tpl.CreateTextNode('${body}')) | Out-Null
+  \$root=\$tpl.SelectSingleNode('/toast')
+  \$root.SetAttribute('activationType','background') | Out-Null
+  \$root.SetAttribute('launch','') | Out-Null
+  \$toast=[Windows.UI.Notifications.ToastNotification]::new(\$tpl)
+  [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('${appid}').Show(\$toast)
+} catch {}
+PS
+)
+enc=$(printf '%s' "$ps" | iconv -f UTF-8 -t UTF-16LE 2>/dev/null | base64 -w0 2>/dev/null) || exit 0
+[ -n "$enc" ] || exit 0
+( powershell.exe -NoProfile -NonInteractive -EncodedCommand "$enc" >/dev/null 2>&1 & )
+exit 0

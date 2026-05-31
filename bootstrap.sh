@@ -101,7 +101,14 @@ green "Linking stow packages"
 # inspects foreign absolute symlinks at $HOME's top level (e.g. ~/.aws -> /mnt/c/...).
 # stow still links correctly; real errors and stow's exit status pass through (only
 # stderr is filtered).
-stow -d "$REPO_DIR" -t "$HOME" --no-folding --restow zsh tmux nvim mise claude starship git wsl \
+# The wsl package holds Windows-host shims (xdg-open, notify-send) that sit ahead
+# of /usr/bin on PATH — on a native box they'd shadow the working Linux tools, so
+# stow it only under WSL.
+PACKAGES="zsh tmux nvim mise claude starship git"
+if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+    PACKAGES="$PACKAGES wsl"
+fi
+stow -d "$REPO_DIR" -t "$HOME" --no-folding --restow $PACKAGES \
     2> >(grep -v 'BUG in find_stowed_path?' >&2)
 
 # --- git identity (shared config is stowed; email stays per-machine) ----------
