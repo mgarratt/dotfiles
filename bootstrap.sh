@@ -28,6 +28,11 @@ declare -A PKGS=(
     [zsh]=zsh [curl]=curl [git]=git [make]=make [tmux]=tmux
     [neovim]=nvim [stow]=stow [age]=age [fd-find]=fdfind
 )
+# Under WSL there's no desktop, so the xdg-open shim (wsl package) hands URLs and
+# files to the Windows host via wslview. Only meaningful on WSL; skip elsewhere.
+if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+    PKGS[wslu]=wslview
+fi
 missing=()
 for pkg in "${!PKGS[@]}"; do
     command -v "${PKGS[$pkg]}" >/dev/null 2>&1 || missing+=("$pkg")
@@ -78,7 +83,8 @@ backup_if_real() {
 }
 for f in "$HOME/.zshrc" "$HOME/.tmux.conf" "$HOME/.gitconfig" \
          "$HOME/.claude/settings.json" "$HOME/.config/nvim/init.vim" \
-         "$HOME/.config/mise/config.toml" "$HOME/.config/git/ignore"; do
+         "$HOME/.config/mise/config.toml" "$HOME/.config/git/ignore" \
+         "$HOME/.local/bin/xdg-open"; do
     backup_if_real "$f"
 done
 
@@ -95,7 +101,7 @@ green "Linking stow packages"
 # inspects foreign absolute symlinks at $HOME's top level (e.g. ~/.aws -> /mnt/c/...).
 # stow still links correctly; real errors and stow's exit status pass through (only
 # stderr is filtered).
-stow -d "$REPO_DIR" -t "$HOME" --no-folding --restow zsh tmux nvim mise claude starship git \
+stow -d "$REPO_DIR" -t "$HOME" --no-folding --restow zsh tmux nvim mise claude starship git wsl \
     2> >(grep -v 'BUG in find_stowed_path?' >&2)
 
 # --- git identity (shared config is stowed; email stays per-machine) ----------

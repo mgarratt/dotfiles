@@ -1,0 +1,24 @@
+#!/bin/sh
+# xdg-open shim for WSL.
+#
+# WSL has no desktop session, so the real xdg-open (from xdg-utils) has nothing
+# to hand things to. Tools like tmux-open call `xdg-open <url|file>` and fail
+# with a "command not found" / no-handler error. Route those to the Windows host.
+#
+# Order of preference:
+#   1. wslview (from the `wslu` apt package) — translates WSL paths to Windows
+#      and opens URLs/files via the default Windows handler, with sane exit codes.
+#   2. explorer.exe — always present on WSL; good enough for URLs as a fallback.
+#
+# This lives at ~/.local/bin/xdg-open, which sits ahead of /usr/bin on PATH.
+
+if command -v wslview >/dev/null 2>&1; then
+    exec wslview "$@"
+fi
+
+if command -v explorer.exe >/dev/null 2>&1; then
+    exec explorer.exe "$@"
+fi
+
+echo "xdg-open: no WSL opener found (install the 'wslu' package for wslview)" >&2
+exit 1
