@@ -58,11 +58,14 @@ fi
 MISE="$(command -v mise || echo "$HOME/.local/bin/mise")"
 
 # --- age key (never auto-generate) --------------------------------------------
+# A missing key is non-fatal: provisioning (links, toolchain, editor) still produces a
+# working machine, and .zshrc guards secret-loading so the shell comes up fine without
+# it. Only the encrypted secrets stay locked until the key is in place.
 AGE_KEY="$HOME/.config/sops/age/keys.txt"
 if [[ ! -f "$AGE_KEY" ]]; then
-    red "No age key found at $AGE_KEY"
+    red "No age key found at $AGE_KEY — continuing without it; secrets won't decrypt until it's in place."
     cat <<EOF
-Secrets can't be decrypted without your age key. Pick one, then re-run this script:
+To enable secrets later, add your key and re-run (or just restart your shell):
 
   (a) Import an existing key (preferred if you already have one):
         mkdir -p "$(dirname "$AGE_KEY")"
@@ -73,7 +76,6 @@ Secrets can't be decrypted without your age key. Pick one, then re-run this scri
         age-keygen -o "$AGE_KEY"
         # then put the printed public key in .sops.yaml and re-encrypt secrets.enc.env
 EOF
-    exit 1
 fi
 
 # --- back up any conflicting real dotfiles ------------------------------------

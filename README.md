@@ -40,6 +40,7 @@ Each top-level directory is a stow package whose tree mirrors `$HOME`:
 | `claude`   | `~/.claude/`                      |
 | `starship` | `~/.config/starship.toml`         |
 | `git`      | `~/.gitconfig`, `~/.config/git/`  |
+| `wsl`      | `~/.local/bin/` shims (`xdg-open`, `notify-send`) — WSL-only |
 
 Add/remove a package with `stow -t ~ <pkg>` / `stow -D -t ~ <pkg>`; re-link after adding
 files with `stow -R -t ~ <pkg>`. The `-t ~` is required because this repo lives outside

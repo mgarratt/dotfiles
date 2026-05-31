@@ -37,7 +37,10 @@ if ! zplug check; then
 fi
 zplug load
 
-# compinit must run before sourcing compdef-based tool integrations below
+# compinit must run before sourcing compdef-based tool integrations below.
+# If startup ever feels slow: `compinit -C` skips the per-start security audit, and the
+# kubectl/flux `source <(... completion zsh)` calls below could be cached to a file
+# instead of regenerating a subshell every shell.
 autoload -Uz compinit && compinit
 
 # Tool completions & integrations — each file no-ops when its tool is absent

@@ -114,7 +114,7 @@ a split or use `ccwt`.
 
 - Versions switch **automatically per project** from `mise.toml` / `.mise.toml`.
 - Also reads other managers' files: `.nvmrc`/`.node-version`, `.ruby-version`/`Gemfile`,
-  `.java-version`/`.sdkmanrc` (node, ruby, java only).
+  `.java-version`/`.sdkmanrc`, `.python-version` (node, ruby, java, python).
 - `corepack` is on, so `yarn`/`pnpm` shims appear after a node install.
 - Global tools: node (lts), ruby, java (temurin-21), clojure, leiningen, go, gh,
   starship, terraform, rust, sops.

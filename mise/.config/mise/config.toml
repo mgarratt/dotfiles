@@ -37,3 +37,7 @@ rust      = "stable"   # rustup-direct only if a project needs nightly/component
 ruff       = "latest"          # python lint + format
 shellcheck = "latest"          # shell lint
 "npm:prettier" = "latest"      # web/markdown/yaml format (via mise node)
+direnv     = "latest"          # per-dir env loading (hooked in zsh; starship module)
+# git pager. Explicit aqua backend for the official linux/arm64 release (same reason
+# as neovim/terraform above); the bare name can resolve to a source-build backend.
+"aqua:dandavison/delta" = "latest"
