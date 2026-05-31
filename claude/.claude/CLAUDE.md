@@ -1,18 +1,28 @@
 # Global instructions
 
-Personal, machine-independent preferences for Claude Code. Project-specific rules
-belong in that project's own `CLAUDE.md` / `AGENTS.md`, not here.
+How I want you to work across all projects. Project-specific rules live in
+that project's own CLAUDE.md / AGENTS.md. For trivial tasks, use judgment —
+these bias toward caution over speed.
 
-## Environment
+## Communication
+- Write in British English.
+- Be concise: make the point and move on. No waffle, no labouring it.
 
-- Linux / WSL (Ubuntu) only. Assume `apt` for system packages.
-- Language/tool versions are managed by `mise`; prefer `mise`-provided binaries.
+## Before coding
+- State assumptions explicitly. If uncertain, or multiple readings exist, ask —
+  don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
 
-## Working style
+## While coding
+- Write the minimum that solves the problem. No speculative features,
+  abstractions, configurability, or error handling for impossible cases.
+  If you write 200 lines and it could be 50, rewrite it.
+- Surgical changes: touch only what the request needs, match surrounding style,
+  and don't refactor or reformat adjacent code. Remove only the orphans your
+  change creates; flag pre-existing dead code rather than deleting it.
+- Define success criteria and verify against them — e.g. a failing test first,
+  then make it pass. Loop until it's actually green.
 
-- Keep changes minimal and match the surrounding code's style.
+## Defaults
 - Don't commit or push unless asked.
-- Never print or commit secrets. On this machine secrets are decrypted at shell
-  startup from a sops+age file — treat any token in the environment as sensitive.
-
-<!-- Flesh out with your own preferences over time. -->
+- Never print or commit secrets; treat any token in the environment as sensitive.
