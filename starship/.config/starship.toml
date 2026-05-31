@@ -17,15 +17,59 @@ right_format = '$time'
 success_symbol = '[❯](green)'
 error_symbol = '[❯](red)'
 
+# Mark the *normal* shell prompt when you're inside a shell Claude Code spawned
+# ($CLAUDECODE is set), so a Claude subshell isn't mistaken for your own.
+[env_var.claudecode]
+variable = 'CLAUDECODE'
+format = '[$symbol]($style)'
+symbol = '✳ '
+style = 'bold magenta'
+
 # Claude Code statusline — rendered via `starship statusline claude-code`.
 # These modules only appear in that profile, not the normal shell prompt.
+#
+# The status line is assembled by ~/.claude/hooks/statusline.py, which renders
+# each section through its own profile below and fits them to $COLUMNS (shedding
+# extras, then breaking to two rows on a narrow terminal). The combined
+# `claude-code` profile is only the no-python fallback.
 [profiles]
-claude-code = "$directory$git_branch$claude_model$claude_context$claude_cost"
+claude-code = "📁 $directory$git_branch $claude_model🧠 $claude_context$claude_cost"
+# Per-section profiles the assembler composes (so it can drop/measure each one).
+# claude-gauge is also fed each rate-limit % so the 5h/7d bars are drawn by the
+# very same claude_context module (identical glyphs + thresholds) as the context.
+claude-gauge = "$claude_context"
+cc-dirbranch = "$directory$git_branch"
+cc-model     = "$claude_model"
+cc-cost      = "$claude_cost"
 
 [claude_model]
 format = '[$symbol$model]($style) '
 symbol = '🤖 '
 style = 'bold blue'
+
+# Context-window gauge + %. Starship's *default* display thresholds HIDE the
+# gauge below 30%, so a fresh session shows nothing — override them to display
+# from the first token, recolouring green→yellow→orange→red as it fills.
+[claude_context]
+gauge_width = 8
+[[claude_context.display]]
+threshold = 0
+style = 'green'
+[[claude_context.display]]
+threshold = 50
+style = 'yellow'
+[[claude_context.display]]
+threshold = 75
+style = 'bold 208'
+[[claude_context.display]]
+threshold = 90
+style = 'bold red'
+
+# Session cost (hidden under $1, yellow ≥$1, red ≥$5 by default) + elapsed
+# wall-clock. The +added/-removed line diff is rendered separately by the
+# assembler (after the branch) so it can be two-coloured.
+[claude_cost]
+format = '[$symbol(\$$cost) ]($style)[(⏱️ $duration)](dimmed white) '
 
 # --- Context modules ---------------------------------------------------------
 # Per-command timestamp, right-aligned (see right_format above).

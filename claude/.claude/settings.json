@@ -2,6 +2,29 @@
   "model": "opus",
   "statusLine": {
     "type": "command",
-    "command": "starship statusline claude-code"
+    "command": "~/.claude/hooks/statusline.sh"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/claude-notify.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/claude-notify.sh" }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/claude-notify.sh" }
+        ]
+      }
+    ]
   }
 }
