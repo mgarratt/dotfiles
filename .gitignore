@@ -5,3 +5,12 @@ keys.txt
 *.dec
 secrets.env
 zsh/.zsh/secrets.env
+
+# Claude Code writes its live runtime state into ~/.claude. With stow's --no-folding
+# that stays in $HOME, but if folding ever regresses these would land in the repo.
+# Allowlist only the files this package manages so nothing else — above all
+# .credentials.json — can ever be committed.
+/claude/.claude/*
+!/claude/.claude/settings.json
+!/claude/.claude/CLAUDE.md
+!/claude/.claude/hooks/
