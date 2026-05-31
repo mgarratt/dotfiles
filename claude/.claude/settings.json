@@ -1,5 +1,43 @@
 {
   "model": "opus",
+  "feedbackSurveyRate": 0,
+  "showTurnDuration": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "permissions": {
+    "allow": [
+      "Bash(* --version)",
+      "Bash(* --help)",
+      "Bash(* --help *)",
+      "Bash(whoami)",
+      "Bash(id *)",
+      "Bash(hostname)",
+      "Bash(uname *)",
+      "Bash(uptime)",
+      "Bash(date)",
+      "Bash(date +*)",
+      "Bash(realpath *)",
+      "Bash(readlink *)",
+      "Bash(dirname *)",
+      "Bash(basename *)",
+      "Bash(file *)",
+      "Bash(type *)",
+      "Bash(command -v *)",
+      "Bash(ps *)",
+      "Bash(df *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)",
+      "Bash(gh issue list *)",
+      "Bash(gh issue view *)",
+      "Bash(gh repo view *)",
+      "Bash(mise ls)",
+      "Bash(mise ls *)",
+      "Bash(mise current *)",
+      "Bash(mise doctor)"
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/hooks/statusline.sh"
