@@ -31,7 +31,10 @@ rust      = "stable"   # rustup-direct only if a project needs nightly/component
 "github:getsops/sops" = { version = "latest", bin = "sops" }
 # Editor. Explicit aqua backend so we get the official linux/arm64 release tarball
 # (the bare `neovim` name can resolve to the vfox plugin, which builds from source).
-"aqua:neovim/neovim" = "latest"   # >=0.11 for builtin LSP/treesitter/gc
+# Pinned to 0.11.x: nvim-treesitter's `master` branch is frozen and does NOT
+# support Neovim 0.12 (injection API change crashes the highlighter). Unpin once
+# we migrate treesitter.lua to the `main` branch (the 0.12-supported rewrite).
+"aqua:neovim/neovim" = "0.11.7"   # >=0.11 for builtin LSP/treesitter/gc
 # Dev tools that double as CLI/CI/pre-commit commands, so they live here (on PATH)
 # rather than inside the editor; nvim's formatter/linter point at these binaries.
 ruff       = "latest"          # python lint + format
