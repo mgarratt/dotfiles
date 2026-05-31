@@ -86,7 +86,12 @@ done
 # Explicit -d/-t: the repo may live outside $HOME (e.g. ~/Projects/dotfiles), so we
 # can't rely on stow's default target (the parent of the stow dir).
 green "Linking stow packages"
-stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude starship git
+# Drop GNU stow's harmless "BUG in find_stowed_path" warnings — triggered when stow
+# inspects foreign absolute symlinks at $HOME's top level (e.g. ~/.aws -> /mnt/c/...).
+# stow still links correctly; real errors and stow's exit status pass through (only
+# stderr is filtered).
+stow -d "$REPO_DIR" -t "$HOME" --restow zsh tmux nvim mise claude starship git \
+    2> >(grep -v 'BUG in find_stowed_path?' >&2)
 
 # --- git identity (shared config is stowed; email stays per-machine) ----------
 # The stowed ~/.gitconfig includes ~/.gitconfig.local for the per-machine email.
