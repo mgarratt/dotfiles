@@ -1,7 +1,8 @@
 # Cheatsheet
 
 The good stuff this setup gives you, so you stop doing things the slow way.
-Covers zsh, fzf, tmux, starship, mise, git, Claude, and the WSL shims (not nvim).
+Covers zsh, fzf, tmux, starship, mise, git, Claude, and the WSL shims. Neovim has its
+own: [nvim/CHEATSHEET.md](nvim/CHEATSHEET.md).
 
 tmux prefix is **`C-b`** (default). "In copy-mode" means after `prefix [`.
 

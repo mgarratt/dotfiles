@@ -26,8 +26,12 @@ fi
 # apt package name -> command it should provide
 declare -A PKGS=(
     [zsh]=zsh [curl]=curl [git]=git [make]=make [tmux]=tmux
-    [neovim]=nvim [stow]=stow [age]=age [fd-find]=fdfind
-    [tree]=tree [dnsutils]=dig
+    [stow]=stow [age]=age [fd-find]=fdfind
+    [tree]=tree [dnsutils]=dig [ripgrep]=rg
+    # neovim is mise-managed (see mise config). build-essential + unzip back its plugin
+    # tooling: a C compiler for treesitter parsers and ruby-lsp's native gems, and unzip
+    # for mason's zip-packaged servers (e.g. terraform-ls). ripgrep backs fzf-lua's grep.
+    [build-essential]=gcc [unzip]=unzip
 )
 # Under WSL there's no desktop, so the xdg-open shim (wsl package) hands URLs and
 # files to the Windows host via wslview. Only meaningful on WSL; skip elsewhere.
@@ -83,7 +87,7 @@ backup_if_real() {
     fi
 }
 for f in "$HOME/.zshrc" "$HOME/.tmux.conf" "$HOME/.gitconfig" \
-         "$HOME/.claude/settings.json" "$HOME/.config/nvim/init.vim" \
+         "$HOME/.claude/settings.json" "$HOME/.config/nvim/init.lua" \
          "$HOME/.config/mise/config.toml" "$HOME/.config/git/ignore" \
          "$HOME/.local/bin/xdg-open"; do
     backup_if_real "$f"
@@ -143,14 +147,25 @@ if [[ ! -d "$TPM_DIR" ]]; then
 fi
 "$TPM_DIR/bin/install_plugins" || true
 
-# --- neovim plugins -----------------------------------------------------------
-PLUG_VIM="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim"
-if [[ ! -f "$PLUG_VIM" ]]; then
-    green "Installing vim-plug"
-    curl -fLo "$PLUG_VIM" --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi
-nvim +PlugInstall +qall || true
+# --- neovim: plugins, language servers, treesitter parsers --------------------
+# neovim is mise-managed and lazy.nvim self-bootstraps from init.lua, so we just drive
+# the headless installs through the mise binary. Each step is best-effort (|| true) so a
+# single parser/server failure doesn't abort provisioning; the rest also self-heal on
+# first interactive launch (mason-tool-installer run_on_start, treesitter ensure_installed).
+green "Syncing neovim plugins (lazy.nvim)"
+"$MISE" exec -- nvim --headless "+Lazy! sync" +qa || true
+green "Installing language servers (mason)"
+# Load the LSP spec so mason-tool-installer runs, and quit on its completion event.
+"$MISE" exec -- nvim --headless \
+    -c "autocmd User MasonToolsUpdateCompleted quitall" \
+    -c "lua require('lazy').load({plugins={'nvim-lspconfig'}})" || true
+green "Building treesitter parsers"
+# TSUpdateSync only refreshes already-installed parsers, so install the ensure_installed
+# set explicitly (read back from the config to avoid duplicating the list here).
+"$MISE" exec -- nvim --headless \
+    -c "lua require('lazy').load({plugins={'nvim-treesitter'}})" \
+    -c "lua vim.cmd('TSInstallSync! '..table.concat(require('nvim-treesitter.configs').get_ensure_installed_parsers(), ' '))" \
+    +qa || true
 
 # --- Claude Code --------------------------------------------------------------
 # Native installer; auto-updates itself in the background thereafter.

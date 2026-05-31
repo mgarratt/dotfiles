@@ -3,7 +3,7 @@ experimental = true
 # Read other version managers' files (.nvmrc/.node-version, .ruby-version/Gemfile,
 # .java-version/.sdkmanrc) for non-mise repos. Opt-in per tool: parsing adds per-dir
 # overhead, and some tools (go's go.mod, terraform's main.tf) pin surprising versions.
-idiomatic_version_file_enable_tools = ["node", "ruby", "java"]
+idiomatic_version_file_enable_tools = ["node", "ruby", "java", "python"]
 # Install corepack shims (yarn/pnpm) after each node install.
 node.corepack = true
 
@@ -13,6 +13,7 @@ node.corepack = true
 [tools]
 node      = "lts"
 ruby      = "latest"
+python    = "latest"   # standalone build; brings python3 + pip
 java      = "temurin-21"
 clojure   = "latest"   # provides clj/clojure
 leiningen = "latest"
@@ -28,3 +29,11 @@ rust      = "stable"   # rustup-direct only if a project needs nightly/component
 # `sops-vX.Y.Z.linux.arm64`, so without help `sops` never lands on PATH; `bin = "sops"`
 # renames it. (ubi works too but its backend is deprecated.)
 "github:getsops/sops" = { version = "latest", bin = "sops" }
+# Editor. Explicit aqua backend so we get the official linux/arm64 release tarball
+# (the bare `neovim` name can resolve to the vfox plugin, which builds from source).
+"aqua:neovim/neovim" = "latest"   # >=0.11 for builtin LSP/treesitter/gc
+# Dev tools that double as CLI/CI/pre-commit commands, so they live here (on PATH)
+# rather than inside the editor; nvim's formatter/linter point at these binaries.
+ruff       = "latest"          # python lint + format
+shellcheck = "latest"          # shell lint
+"npm:prettier" = "latest"      # web/markdown/yaml format (via mise node)

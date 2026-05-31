@@ -11,8 +11,8 @@ machine; day-to-day, files are symlinked into `$HOME` by stow.
 ## Stow model
 
 - A file only gets linked into `$HOME` if it lives inside a package at the path it should
-  occupy under `$HOME` (e.g. `zsh/.zshrc` → `~/.zshrc`, `nvim/.config/nvim/init.vim` →
-  `~/.config/nvim/init.vim`). To add a newly-linked file, place it in the right package's
+  occupy under `$HOME` (e.g. `zsh/.zshrc` → `~/.zshrc`, `nvim/.config/nvim/init.lua` →
+  `~/.config/nvim/init.lua`). To add a newly-linked file, place it in the right package's
   `$HOME`-mirroring tree, then `stow -R -t ~ <package>`. The `-t ~` matters: this repo
   lives outside `$HOME`, so without it stow targets the repo's parent directory.
 - Editing a dotfile means editing through a symlink straight into this repo — there is no
