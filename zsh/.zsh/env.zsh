@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-export SHORT_HOST=${HOST/.*/}
-
 export EDITOR="nvim"
 export PAGER="less"
 export LESS="-R"

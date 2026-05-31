@@ -87,8 +87,3 @@ format = 'on [$symbol$context( \($namespace\))]($style) '
 # Show when a directory's direnv environment is loaded.
 [direnv]
 disabled = false
-
-# AWS profile/region is shown by default; also surface the Azure subscription.
-[azure]
-disabled = false
-format = 'on [$symbol($subscription)]($style) '
