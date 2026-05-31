@@ -18,8 +18,8 @@ starship  = "latest"   # shell prompt; prebuilt aarch64 binary (no rust needed)
 # but aqua:hashicorp/terraform lists versions and has linux/arm64 builds.
 "aqua:hashicorp/terraform" = "latest"
 rust      = "stable"   # rustup-direct only if a project needs nightly/components/targets
-# sops decrypts secrets at startup. Use the ubi backend: it has linux/arm64 assets
-# (the default aqua package doesn't) AND installs the bare release binary as `sops`.
-# The github backend leaves it named `sops-vX.Y.Z.linux.arm64`, so `sops` never lands
-# on PATH — ubi's deprecation warning is harmless by comparison.
-"ubi:getsops/sops" = "latest"
+# sops decrypts secrets at startup. Use the github backend (release binary) — it has
+# linux/arm64 assets, which the default aqua package lacks. The bare asset is named
+# `sops-vX.Y.Z.linux.arm64`, so without help `sops` never lands on PATH; `bin = "sops"`
+# renames it. (ubi works too but its backend is deprecated.)
+"github:getsops/sops" = { version = "latest", bin = "sops" }
