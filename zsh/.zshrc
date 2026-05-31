@@ -5,8 +5,10 @@
 source ~/.zsh/env.zsh
 source ~/.zsh/aliases.zsh
 
-# Always start tmux if it's installed, we're not already in tmux, and not in VS Code
-if (( $+commands[tmux] )) && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
+# Always start tmux if it's installed, we're not already in tmux, and not in VS Code.
+# Two VS Code signals: TERM_PROGRAM is set in its integrated terminal; VSCODE_PID covers
+# cases where that doesn't propagate (e.g. a re-exec'd login shell).
+if (( $+commands[tmux] )) && [[ -z "$TMUX" ]] && [[ -z "${VSCODE_PID:-}" ]] && [[ "${TERM_PROGRAM:-}" != "vscode" ]]; then
     TMUX_SESSION=${TMUX_SESSION:-'zsh-session'}
     tmux attach -t ${TMUX_SESSION} || tmux new -s ${TMUX_SESSION}
     exit
