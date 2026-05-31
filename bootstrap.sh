@@ -27,6 +27,7 @@ fi
 declare -A PKGS=(
     [zsh]=zsh [curl]=curl [git]=git [make]=make [tmux]=tmux
     [neovim]=nvim [stow]=stow [age]=age [fd-find]=fdfind
+    [tree]=tree [dnsutils]=dig
 )
 # Under WSL there's no desktop, so the xdg-open shim (wsl package) hands URLs and
 # files to the Windows host via wslview. Only meaningful on WSL; skip elsewhere.
