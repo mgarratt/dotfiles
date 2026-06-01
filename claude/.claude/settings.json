@@ -4,6 +4,7 @@
   "showTurnDuration": true,
   "preferredNotifChannel": "notifications_disabled",
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "Bash(* --version)",
       "Bash(* --help)",
