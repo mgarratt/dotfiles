@@ -44,3 +44,9 @@ direnv     = "latest"          # per-dir env loading (hooked in zsh; starship mo
 # git pager. Explicit aqua backend for the official linux/arm64 release (same reason
 # as neovim/terraform above); the bare name can resolve to a source-build backend.
 "aqua:dandavison/delta" = "latest"
+# AWS CLI for the ticket-categorisation repo (SSO login + Bedrock). Default backend
+# is already the official aqua release binary.
+"aqua:aws/aws-cli" = "latest"
+# uv: Python env/dependency manager for the ticket-categorisation repo. Default
+# backend is already the official aqua release binary.
+"aqua:astral-sh/uv" = "latest"

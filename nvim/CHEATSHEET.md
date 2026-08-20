@@ -19,6 +19,9 @@ out literally, so `\f` means *backslash then f*.
   wheels, not a bug. `:Hardtime toggle` to silence it for a session.
 - **No Python/Ruby/Node host providers** — nothing here needs them; `:checkhealth`
   flagging them as disabled is expected.
+- **wiki.vim's default `\w` mappings are a no-op** — `winresizer` already owns `\w`
+  (see below), and wiki.vim skips binding any key that's already mapped rather than
+  overriding it. Drive it via the `:Wiki*` commands instead (see below).
 
 ---
 
@@ -100,6 +103,20 @@ Servers (auto-installed via mason): **pyright**, **ruby-lsp**, **typescript-lang
 - **matchmaker** highlights other occurrences of the word under the cursor.
 - **vimade** fades inactive windows so the focused one stands out.
 - Indent guides (`┆`) and a subtle **column marker at 80 and 120**.
+
+---
+
+## Personal wiki (wiki.vim)
+
+`g:wiki_root` is unset, so the wiki root is resolved relative to wherever you open a
+`.md` file (see house deviations for why the default `\w` mappings don't fire).
+
+| What | How |
+|---|---|
+| Open the wiki index | `:WikiIndex` |
+| Open today's journal entry | `:WikiJournal` |
+| Pick a wiki page | `:WikiPages` |
+| Open link under cursor | `:WikiOpen` |
 
 ---
 

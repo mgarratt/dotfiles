@@ -33,5 +33,6 @@
   "vim-tmux-focus-events": { "branch": "master", "commit": "b1330e04ffb95ede8e02b2f7df1f238190c67056" },
   "vim-tmux-navigator": { "branch": "master", "commit": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432" },
   "vimade": { "branch": "master", "commit": "3d3d2db7ecd43c0181b20fede11d26f090dbc0d9" },
+  "wiki.vim": { "branch": "master", "commit": "8c0fa810dc991ec855908d0608d135d50c45f21d" },
   "winresizer": { "branch": "master", "commit": "299076f7f79e2e2f7706b2dfacbb3c074ce53257" }
 }

@@ -10,8 +10,13 @@ source ~/.zsh/aliases.zsh
 # cases where that doesn't propagate (e.g. a re-exec'd login shell).
 if (( $+commands[tmux] )) && [[ -z "$TMUX" ]] && [[ -z "${VSCODE_PID:-}" ]] && [[ "${TERM_PROGRAM:-}" != "vscode" ]]; then
     TMUX_SESSION=${TMUX_SESSION:-'zsh-session'}
-    tmux attach -t ${TMUX_SESSION} || tmux new -s ${TMUX_SESSION}
-    exit
+    # Only close the terminal once tmux has actually run. If tmux fails to start,
+    # fall through to a plain shell so the error stays visible instead of the
+    # window silently vanishing.
+    if tmux attach -t ${TMUX_SESSION} || tmux new -s ${TMUX_SESSION}; then
+        exit
+    fi
+    print -u2 "tmux failed to start; continuing in plain zsh"
 fi
 
 setopt autocd extendedglob nomatch long_list_jobs
@@ -40,10 +45,9 @@ fi
 zplug load
 
 # compinit must run before sourcing compdef-based tool integrations below.
-# If startup ever feels slow: `compinit -C` skips the per-start security audit, and the
-# kubectl/flux `source <(... completion zsh)` calls below could be cached to a file
-# instead of regenerating a subshell every shell.
-autoload -Uz compinit && compinit
+# -C skips the per-start security audit (the dump is trusted); drop it if completions
+# ever look stale. Tool completions that spawn a subshell are cached to files below.
+autoload -Uz compinit && compinit -C
 
 # Tool completions & integrations — each file no-ops when its tool is absent
 for file in ~/.zsh/completions/*.zsh(N); do source "$file"; done

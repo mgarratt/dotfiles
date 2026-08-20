@@ -1,10 +1,5 @@
 {
-  "model": "opus",
-  "feedbackSurveyRate": 0,
-  "showTurnDuration": true,
-  "preferredNotifChannel": "notifications_disabled",
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(* --version)",
       "Bash(* --help)",
@@ -37,33 +32,63 @@
       "Bash(mise ls *)",
       "Bash(mise current *)",
       "Bash(mise doctor)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/hooks/statusline.sh"
-  },
+  "model": "opus",
   "hooks": {
     "Notification": [
       {
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/claude-notify.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-notify.sh"
+          }
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/claude-notify.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-notify.sh"
+          }
         ]
       }
     ],
     "UserPromptSubmit": [
       {
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/claude-notify.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-notify.sh"
+          }
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/hooks/statusline.sh"
+  },
+  "extraKnownMarketplaces": {
+    "fc-prodeng": {
+      "source": {
+        "source": "github",
+        "repo": "FundingCircle/prodeng-skills"
+      }
+    }
+  },
+  "feedbackSurveyRate": 0,
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "editorMode": "vim",
+  "preferredNotifChannel": "notifications_disabled",
+  "showTurnDuration": true,
+  "enabledPlugins": {
+    "sdlc@fc-prodeng": true
   }
 }

@@ -17,6 +17,8 @@ return {
     init = function() vim.g.winresizer_start_key = "<Leader>w" end,
   },
   { "unblevable/quick-scope", event = "VeryLazy" },
+  -- Personal wiki: <Leader>ww index, <Leader>wj journal, <Leader>wp page picker.
+  { "lervag/wiki.vim", event = "VeryLazy" },
   {
     "qstrahl/vim-matchmaker",
     event = "VeryLazy",
