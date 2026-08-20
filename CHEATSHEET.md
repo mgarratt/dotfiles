@@ -23,7 +23,7 @@ tmux prefix is **`C-b`** (default). "In copy-mode" means after `prefix [`.
 | Alias | Expands to |
 |---|---|
 | `vim` | `nvim` |
-| `fd` | `fdfind` (Ubuntu's binary name) |
+| `fd` | `fdfind` on Ubuntu only (its binary name); already `fd` on macOS |
 | `gst` | `git status` |
 | `rfkill` | `sudo rfkill` |
 | `cc` / `ccc` / `ccr` | `claude` / `claude --continue` / `claude --resume` |

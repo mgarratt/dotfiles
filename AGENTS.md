@@ -4,7 +4,7 @@ Rules and intent for editing these dotfiles. (`CLAUDE.md` is a symlink to this f
 
 ## What this repo is
 
-A GNU stow-managed dotfiles repo for Linux/WSL (Ubuntu). Each top-level directory is a
+A GNU stow-managed dotfiles repo for Linux/WSL (Ubuntu) and macOS. Each top-level directory is a
 stow *package* whose internal tree mirrors `$HOME`. `bootstrap.sh` provisions a fresh
 machine; day-to-day, files are symlinked into `$HOME` by stow.
 
@@ -42,6 +42,11 @@ machine; day-to-day, files are symlinked into `$HOME` by stow.
 
 ## Platform
 
-- Linux/WSL, Ubuntu/apt only — do not add macOS branches.
-- `bootstrap.sh` must stay idempotent and defensive: bail cleanly on non-apt systems and
-  never clobber existing files.
+- Supported: Linux/WSL (Ubuntu/apt) and macOS (brew). Don't add branches for other
+  platforms.
+- Keep both platforms working from the same config wherever possible (mise handles
+  toolchains on both already); only fork behaviour in `bootstrap.sh`'s package-install
+  step, or behind a `uname`/`command -v` guard, when a tool's name or availability
+  actually differs between them.
+- `bootstrap.sh` must stay idempotent and defensive: bail cleanly on unsupported systems
+  and never clobber existing files.

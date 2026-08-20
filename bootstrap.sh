@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Provision this machine from the dotfiles repo.
-# Ubuntu/apt only. Idempotent and defensive: it never clobbers existing files and
-# bails cleanly on unsupported systems.
+# Ubuntu/apt or macOS/brew. Idempotent and defensive: it never clobbers existing files
+# and bails cleanly on unsupported systems.
 #
 set -euo pipefail
 
@@ -17,37 +17,89 @@ green() { printf '\033[0;32m[bootstrap]\033[0m %s\n' "$*"; }
 red()   { printf '\033[0;31m[bootstrap]\033[0m %s\n' "$*" >&2; }
 
 # --- platform guard -----------------------------------------------------------
-if ! command -v apt-get >/dev/null 2>&1; then
-    red "apt-get not found. Only Ubuntu/apt is supported; leaving this system untouched."
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    PLATFORM=macos
+elif command -v apt-get >/dev/null 2>&1; then
+    PLATFORM=ubuntu
+else
+    red "Neither macOS nor apt-get found. Only Ubuntu/apt and macOS/brew are supported; leaving this system untouched."
     exit 0
 fi
 
-# --- system packages (apt) ----------------------------------------------------
-# apt package name -> command it should provide
-declare -A PKGS=(
-    [zsh]=zsh [curl]=curl [git]=git [make]=make [tmux]=tmux
-    [stow]=stow [age]=age [fd-find]=fdfind
-    [tree]=tree [dnsutils]=dig [ripgrep]=rg
-    # neovim is mise-managed (see mise config). build-essential + unzip back its plugin
-    # tooling: a C compiler for treesitter parsers and ruby-lsp's native gems, and unzip
-    # for mason's zip-packaged servers (e.g. terraform-ls). ripgrep backs fzf-lua's grep.
-    [build-essential]=gcc [unzip]=unzip
-)
-# Under WSL there's no desktop, so the xdg-open shim (wsl package) hands URLs and
-# files to the Windows host via wslview. Only meaningful on WSL; skip elsewhere.
-if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
-    PKGS[wslu]=wslview
+# --- Homebrew (macOS only) -----------------------------------------------------
+if [[ "$PLATFORM" == macos ]]; then
+    # xcode-select --install pops a GUI dialog it can't drive non-interactively, so
+    # trigger it and stop rather than hang; re-running after it finishes picks up here.
+    if ! xcode-select -p >/dev/null 2>&1; then
+        red "Xcode Command Line Tools not found. Triggering the installer — finish the popup, then re-run this script."
+        xcode-select --install || true
+        exit 0
+    fi
+    if ! command -v brew >/dev/null 2>&1; then
+        green "Installing Homebrew"
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    # Brew installs to /opt/homebrew on Apple Silicon, /usr/local on Intel; neither is
+    # guaranteed to be on PATH yet in this shell.
+    BREW_PREFIX="/usr/local"
+    [[ -d /opt/homebrew ]] && BREW_PREFIX="/opt/homebrew"
+    eval "$("$BREW_PREFIX/bin/brew" shellenv)"
+
+    # macOS ships bash 3.2 (Apple froze it at the last GPLv2 release) as /bin/bash and
+    # /usr/bin/env bash — no associative arrays, which the package list below needs.
+    # Re-exec under Homebrew's bash 4+ once it's available.
+    if (( BASH_VERSINFO[0] < 4 )); then
+        [[ -x "$BREW_PREFIX/bin/bash" ]] || brew install bash
+        exec "$BREW_PREFIX/bin/bash" "$REPO_DIR/$(basename "${BASH_SOURCE[0]}")" "$@"
+    fi
 fi
-missing=()
-for pkg in "${!PKGS[@]}"; do
-    command -v "${PKGS[$pkg]}" >/dev/null 2>&1 || missing+=("$pkg")
-done
-if (( ${#missing[@]} )); then
-    green "Installing missing apt packages: ${missing[*]}"
-    sudo apt-get update -qq
-    sudo apt-get install -y "${missing[@]}"
+
+# --- system packages -----------------------------------------------------------
+if [[ "$PLATFORM" == ubuntu ]]; then
+    # apt package name -> command it should provide
+    declare -A PKGS=(
+        [zsh]=zsh [curl]=curl [git]=git [make]=make [tmux]=tmux
+        [stow]=stow [age]=age [fd-find]=fdfind
+        [tree]=tree [dnsutils]=dig [ripgrep]=rg
+        # neovim is mise-managed (see mise config). build-essential + unzip back its plugin
+        # tooling: a C compiler for treesitter parsers and ruby-lsp's native gems, and unzip
+        # for mason's zip-packaged servers (e.g. terraform-ls). ripgrep backs fzf-lua's grep.
+        [build-essential]=gcc [unzip]=unzip
+    )
+    # Under WSL there's no desktop, so the xdg-open shim (wsl package) hands URLs and
+    # files to the Windows host via wslview. Only meaningful on WSL; skip elsewhere.
+    if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
+        PKGS[wslu]=wslview
+    fi
+    missing=()
+    for pkg in "${!PKGS[@]}"; do
+        command -v "${PKGS[$pkg]}" >/dev/null 2>&1 || missing+=("$pkg")
+    done
+    if (( ${#missing[@]} )); then
+        green "Installing missing apt packages: ${missing[*]}"
+        sudo apt-get update -qq
+        sudo apt-get install -y "${missing[@]}"
+    else
+        green "All apt dependencies present"
+    fi
 else
-    green "All apt dependencies present"
+    # brew formula name -> command it should provide. make/gcc and unzip/dig ship with
+    # macOS itself (make/clang via Xcode CLT, unzip/dig in the base OS), so they're not
+    # listed here — only what's actually missing on a bare macOS install.
+    declare -A PKGS=(
+        [zsh]=zsh [curl]=curl [git]=git [tmux]=tmux
+        [stow]=stow [age]=age [fd]=fd [tree]=tree [ripgrep]=rg
+    )
+    missing=()
+    for pkg in "${!PKGS[@]}"; do
+        command -v "${PKGS[$pkg]}" >/dev/null 2>&1 || missing+=("$pkg")
+    done
+    if (( ${#missing[@]} )); then
+        green "Installing missing brew packages: ${missing[*]}"
+        brew install "${missing[@]}"
+    else
+        green "All brew dependencies present"
+    fi
 fi
 
 # --- mise (toolchain manager) -------------------------------------------------
@@ -109,8 +161,8 @@ green "Linking stow packages"
 # stow still links correctly; real errors and stow's exit status pass through (only
 # stderr is filtered).
 # The wsl package holds Windows-host shims (xdg-open, notify-send) that sit ahead
-# of /usr/bin on PATH — on a native box they'd shadow the working Linux tools, so
-# stow it only under WSL.
+# of /usr/bin on PATH — off WSL (native Linux or macOS) they'd shadow the working
+# tools, so stow it only under WSL.
 PACKAGES="zsh tmux nvim mise claude starship git"
 if grep -qiE '(microsoft|wsl)' /proc/version 2>/dev/null; then
     PACKAGES="$PACKAGES wsl"

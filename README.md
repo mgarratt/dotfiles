@@ -1,7 +1,7 @@
 # dotfiles
 
-Personal dotfiles for Linux/WSL (Ubuntu). Managed with [GNU stow]; toolchains with
-[mise]; secrets with [sops] + [age].
+Personal dotfiles for Linux/WSL (Ubuntu) and macOS. Managed with [GNU stow]; toolchains
+with [mise]; secrets with [sops] + [age].
 
 ## New machine
 
@@ -11,10 +11,13 @@ cd ~/Projects/dotfiles
 ./bootstrap.sh
 ```
 
-`bootstrap.sh` is Ubuntu/apt-only and defensive — it installs missing dependencies,
-links the stow packages, installs the mise toolchain, and sets up tmux/neovim plugins.
-It will **stop and ask for your age key** before touching secrets (it never generates
-one for you). On a fresh machine, copy your existing key into place first:
+`bootstrap.sh` supports Ubuntu/apt and macOS/brew, and is defensive — it installs
+missing dependencies, links the stow packages, installs the mise toolchain, and sets up
+tmux/neovim plugins. On macOS it installs Xcode Command Line Tools and Homebrew first if
+they're missing (the CLT install is a GUI popup it can't drive for you — re-run the
+script once that finishes). It will **stop and ask for your age key** before touching
+secrets (it never generates one for you). On a fresh machine, copy your existing key into
+place first:
 
 ```sh
 mkdir -p ~/.config/sops/age
@@ -41,6 +44,9 @@ Each top-level directory is a stow package whose tree mirrors `$HOME`:
 | `starship` | `~/.config/starship.toml`         |
 | `git`      | `~/.gitconfig`, `~/.config/git/`  |
 | `wsl`      | `~/.local/bin/` shims (`xdg-open`, `notify-send`) — WSL-only |
+
+`wsl` is only stowed under WSL; on macOS and native Linux those tools are already
+present (or absent by design), so `bootstrap.sh` skips it.
 
 Add/remove a package with `stow -t ~ <pkg>` / `stow -D -t ~ <pkg>`; re-link after adding
 files with `stow -R -t ~ <pkg>`. The `-t ~` is required because this repo lives outside
