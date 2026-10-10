@@ -34,7 +34,7 @@ rust      = "stable"   # rustup-direct only if a project needs nightly/component
 # Pinned to 0.11.x: nvim-treesitter's `master` branch is frozen and does NOT
 # support Neovim 0.12 (injection API change crashes the highlighter). Unpin once
 # we migrate treesitter.lua to the `main` branch (the 0.12-supported rewrite).
-"aqua:neovim/neovim" = "0.11.7"   # >=0.11 for builtin LSP/treesitter/gc
+"aqua:neovim/neovim" = "0.12.6"   # >=0.11 for builtin LSP/treesitter/gc
 # Dev tools that double as CLI/CI/pre-commit commands, so they live here (on PATH)
 # rather than inside the editor; nvim's formatter/linter point at these binaries.
 ruff       = "latest"          # python lint + format
